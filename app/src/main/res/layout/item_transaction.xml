@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="4dp"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="8dp"
+    android:foreground="?attr/selectableItemBackground">
+
+<LinearLayout
     android:orientation="horizontal"
     android:padding="12dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/ivTypeIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_category"
+        android:layout_marginEnd="12dp"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="Transaction type icon"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -13,15 +32,19 @@
         <TextView android:id="@+id/tvCategory"
             android:textStyle="bold"
             android:textSize="16sp"
+            android:textColor="#212121"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView android:id="@+id/tvNote"
             android:textSize="13sp"
+            android:textColor="#757575"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView android:id="@+id/tvDate"
             android:textSize="12sp"
-            android:textColor="#757575"
+            android:textColor="#9E9E9E"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -41,5 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@android:drawable/ic_delete"
-        android:background="?attr/selectableItemBackgroundBorderless"/>
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Delete transaction"/>
 </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

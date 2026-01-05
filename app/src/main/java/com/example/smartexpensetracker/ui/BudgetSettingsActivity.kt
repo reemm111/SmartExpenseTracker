@@ -54,14 +54,12 @@ class BudgetSettingsActivity : AppCompatActivity() {
     }
 
     private fun saveBudgets() {
-        // Save overall budget
         val overallBudgetText = binding.etOverallBudget.text.toString()
         if (overallBudgetText.isNotEmpty()) {
             val overallBudget = overallBudgetText.toDoubleOrNull() ?: 0.0
             BudgetPreferences.setOverallBudget(this, overallBudget)
         }
 
-        // Save category budgets
         saveCategoryBudget("Food", binding.etFoodBudget.text.toString())
         saveCategoryBudget("Transportation", binding.etTransportationBudget.text.toString())
         saveCategoryBudget("Shopping", binding.etShoppingBudget.text.toString())

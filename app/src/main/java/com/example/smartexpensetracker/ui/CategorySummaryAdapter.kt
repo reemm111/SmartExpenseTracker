@@ -5,11 +5,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartexpensetracker.databinding.ItemCategorySummaryBinding
+import com.example.smartexpensetracker.utils.CurrencyPreferences
 import java.text.NumberFormat
 import java.util.*
 
 class CategorySummaryAdapter(
-    private var summaries: List<CategorySummary>
+    private var summaries: List<CategorySummary>,
+    private var currencyCode: String = "USD"
 ) : RecyclerView.Adapter<CategorySummaryAdapter.CategorySummaryViewHolder>() {
 
     inner class CategorySummaryViewHolder(val binding: ItemCategorySummaryBinding) :
@@ -28,11 +30,17 @@ class CategorySummaryAdapter(
 
     override fun onBindViewHolder(holder: CategorySummaryViewHolder, position: Int) {
         val summary = summaries[position]
-        val currencyFormat = NumberFormat.getCurrencyInstance(Locale.US)
+        val symbol = CurrencyPreferences.getCurrencySymbol(currencyCode)
 
         holder.binding.apply {
             tvCategoryName.text = summary.categoryName
-            tvCategoryAmount.text = currencyFormat.format(summary.totalAmount)
+            
+            // Format amount based on currency (no decimals for JPY, KRW)
+            tvCategoryAmount.text = when (currencyCode) {
+                "JPY", "KRW" -> "%s%,.0f".format(symbol, summary.totalAmount)
+                else -> "%s%.2f".format(symbol, summary.totalAmount)
+            }
+            
             tvPercentage.text = String.format("%.1f%%", summary.percentage)
             tvTransactionCount.text = "${summary.transactionCount} transaction${if(summary.transactionCount > 1) "s" else ""}"
             
@@ -48,8 +56,9 @@ class CategorySummaryAdapter(
         }
     }
 
-    fun updateList(newSummaries: List<CategorySummary>) {
+    fun updateList(newSummaries: List<CategorySummary>, currency: String = "USD") {
         summaries = newSummaries
+        currencyCode = currency
         notifyDataSetChanged()
     }
 }

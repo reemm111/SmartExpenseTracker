@@ -20,16 +20,60 @@ class AddTransactionActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddTransactionBinding
     private val viewModel: TransactionViewModel by viewModels()
     private var currentCategories: List<String> = CategorySuggestionHelper.expenseCategories
+    private var editTransactionId: Int = 0
+    private var isEditMode = false
+
+    companion object {
+        const val EXTRA_TRANSACTION_ID = "transaction_id"
+        const val EXTRA_AMOUNT = "amount"
+        const val EXTRA_CATEGORY = "category"
+        const val EXTRA_NOTE = "note"
+        const val EXTRA_TYPE = "type"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddTransactionBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        checkEditMode()
         setupCategorySpinner()
         setupTypeRadioGroup()
         setupAmountWatcher()
         setupButtons()
+    }
+    
+    private fun checkEditMode() {
+        editTransactionId = intent.getIntExtra(EXTRA_TRANSACTION_ID, 0)
+        if (editTransactionId != 0) {
+            isEditMode = true
+            binding.tvTitle.text = "Edit Transaction"
+            binding.btnSave.text = "Update"
+            
+            val amount = intent.getDoubleExtra(EXTRA_AMOUNT, 0.0)
+            val category = intent.getStringExtra(EXTRA_CATEGORY) ?: ""
+            val note = intent.getStringExtra(EXTRA_NOTE) ?: ""
+            val type = intent.getStringExtra(EXTRA_TYPE) ?: "Expense"
+            
+            binding.etAmount.setText(amount.toString())
+            binding.etNote.setText(note)
+            
+            if (type == "Income") {
+                binding.rbIncome.isChecked = true
+            } else {
+                binding.rbExpense.isChecked = true
+            }
+            
+            binding.spinnerCategory.post {
+                val categoryIndex = currentCategories.indexOf(category)
+                if (categoryIndex != -1) {
+                    binding.spinnerCategory.setSelection(categoryIndex)
+                }
+            }
+        } else {
+            binding.tvTitle.text = "Add Transaction"
+            binding.btnSave.text = "Save"
+        }
     }
 
     private fun setupCategorySpinner() {
@@ -119,8 +163,13 @@ class AddTransactionActivity : AppCompatActivity() {
         val category = binding.spinnerCategory.selectedItem?.toString() ?: "Other"
         val note = binding.etNote.text.toString()
         val type = if (binding.rbExpense.isChecked) "Expense" else "Income"
+        
+        binding.progressBar.visibility = View.VISIBLE
+        binding.btnSave.isEnabled = false
+        binding.btnCancel.isEnabled = false
 
         val transaction = Transaction(
+            id = if (isEditMode) editTransactionId else 0,
             amount = amount,
             category = category,
             note = note,
@@ -128,8 +177,18 @@ class AddTransactionActivity : AppCompatActivity() {
             date = System.currentTimeMillis()
         )
 
-        viewModel.insert(transaction)
-        Toast.makeText(this, "$type saved successfully!", Toast.LENGTH_SHORT).show()
+        if (isEditMode) {
+            viewModel.update(transaction)
+            Toast.makeText(this, "✅ $type updated successfully!", Toast.LENGTH_SHORT).show()
+        } else {
+            viewModel.insert(transaction)
+            Toast.makeText(this, "✅ $type saved successfully!", Toast.LENGTH_SHORT).show()
+        }
+        
+        binding.progressBar.visibility = View.GONE
+        binding.btnSave.isEnabled = true
+        binding.btnCancel.isEnabled = true
+        
         finish()
     }
 }

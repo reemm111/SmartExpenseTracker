@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     
     <item
+        android:id="@+id/action_search"
+        android:title="Search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="ifRoom"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+    
+    <item
         android:id="@+id/action_summary"
         android:title="Category Summary"
         android:icon="@android:drawable/ic_menu_view"
@@ -12,6 +19,18 @@
         android:id="@+id/action_budget"
         android:title="Budget Settings"
         android:icon="@android:drawable/ic_menu_edit"
+        app:showAsAction="never"/>
+    
+    <item
+        android:id="@+id/action_change_currency"
+        android:title="Change Currency"
+        android:icon="@android:drawable/ic_menu_rotate"
+        app:showAsAction="never"/>
+    
+    <item
+        android:id="@+id/action_export_pdf"
+        android:title="Export PDF"
+        android:icon="@android:drawable/ic_menu_save"
         app:showAsAction="never"/>
     
 </menu>

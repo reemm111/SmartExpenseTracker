@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("kotlin-kapt") // Room annotation processor
+    id("kotlin-kapt")
 }
 
 android {
@@ -35,6 +35,8 @@ android {
 
     kotlinOptions {
         jvmTarget = "11"
+        languageVersion = "1.9"
+        apiVersion = "1.9"
     }
 
     buildFeatures {
@@ -43,30 +45,33 @@ android {
 }
 
 dependencies {
-    // Core AndroidX
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-
-    // RecyclerView
     implementation(libs.androidx.recyclerview)
-
-    // Room Database
+    
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     kapt(libs.androidx.room.compiler)
-
-    // Lifecycle & ViewModel
+    
     implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.lifecycle.livedata)
-
-    // Navigation (optional)
+    
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
-
-    // Testing
+    
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.gson)
+    implementation(libs.okhttp.logging)
+    
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.core)
+    
+    implementation(libs.itext.pdf)
+    
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
